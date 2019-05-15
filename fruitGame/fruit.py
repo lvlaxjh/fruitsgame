@@ -25,8 +25,8 @@ class Fruits(Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def load(self,a):
-        self.screen.blit(pygame.transform.rotate(pygame.transform.scale(self.image,(300,300)),a),self.rect)
+    def load(self):
+        self.screen.blit(pygame.transform.scale(self.image,(300,300)),self.rect)
         print(self.rect.width)
         print(self.rect.height)
     def update(self):
