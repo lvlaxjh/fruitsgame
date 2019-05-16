@@ -59,14 +59,17 @@ def getEdge(img):
 #     return (int(z[l]),int(dot_pos_x[l]))
 
 def percess_by_hsv(img,lower=np.array([0,131,180]),uper=np.array([6,255,255])):
-    img=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    bin_img=cv2.inRange(img, lower, uper)
-    edge = getEdge(bin_img)
-    dot_pos_x, dot_pos_y = np.where(edge != 0)
-    poly = np.polyfit(dot_pos_x, dot_pos_y, deg=1)
-    z = np.polyval(poly, dot_pos_x)
-    l = np.where(z == z.min())[0][0]
-    return (int(z[l]), int(dot_pos_x[l]))
+    try:
+        img=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        bin_img=cv2.inRange(img, lower, uper)
+        edge = getEdge(bin_img)
+        dot_pos_x, dot_pos_y = np.where(edge != 0)
+        poly = np.polyfit(dot_pos_x, dot_pos_y, deg=1)
+        z = np.polyval(poly, dot_pos_x)
+        l = np.where(z == z.min())[0][0]
+        return (int(z[l]), int(dot_pos_x[l]))
+    except:
+        return(-1,-1)
 
 def get_pen_head_pos(img_path):
     '''获取画笔头的位置'''
