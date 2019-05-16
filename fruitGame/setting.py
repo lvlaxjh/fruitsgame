@@ -6,6 +6,11 @@ class Setting():
         self.screen_height = win32api.GetSystemMetrics(win32con.SM_CYSCREEN)
         self.fruit_speed = 10
 
-        self.start_game_img = (350,350)
-        self.setting_game_img = (300,300)
-        self.esc_game_img = (200,200)
+        self.start_button = {
+            'st':(120, 347),
+            'op':(673, 433),
+            'ex':(1199, 365),
+            'st_tra': (600,600),
+            'op_tra': (500,500),
+            'ex_tra': (450,450),
+        }
