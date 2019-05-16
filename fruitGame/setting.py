@@ -4,7 +4,7 @@ class Setting():
     def __init__(self):
         self.screen_width = win32api.GetSystemMetrics(win32con.SM_CXSCREEN)
         self.screen_height = win32api.GetSystemMetrics(win32con.SM_CYSCREEN)
-        self.fruit_speed = 10
+        self.fruit_size = 300
 
         self.start_button = {
             'st':(120, 347),
