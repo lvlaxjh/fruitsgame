@@ -6,7 +6,7 @@ import numpy as np
 import sys
 import random
 import setting
-from img_percess import percess
+
 from item import Item
 
 class Fruits(Sprite):

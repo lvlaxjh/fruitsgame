@@ -8,9 +8,9 @@ import random
 import threading
 #
 import setting
-from img_percess import percess
+import img_percess_red
 from fruit import Fruits
-from stbutton import StButton
+
 get_all_img ={
     'f1': pygame.image.load('img/fruit/f1.png'),
     'f2': pygame.image.load('img/fruit/f2.png'),
@@ -71,9 +71,9 @@ def cvimage_to_pygame(frame):
     frame = pygame.surfarray.make_surface(frame)
     return frame
 #界面更新
-def update_screen(screen,fruits_group,mouse_xy):
-    screen.fill((0, 0, 0))  # 测试使用,使用调用frame摄像头
-
+def update_screen(screen,fruits_group,mouse_xy,frame):
+    # screen.fill((0, 0, 0))  # 测试使用,使用调用frame摄像头
+    screen.blit(frame,(0,0))
     pygame.draw.circle(screen, [255, 0, 0], mouse_xy, 5)
 
     for i in fruits_group.sprites():
@@ -156,6 +156,7 @@ if __name__ == "__main__":
     #界面初始化
     screen = pygame.display.set_caption('fuck fruits')
     screen = pygame.display.set_mode((game_setting.screen_width,game_setting.screen_height),pygame.FULLSCREEN|pygame.HWSURFACE)
+    # screen = pygame.display.set_mode((600,400))
     clock = pygame.time.Clock()
     #水果精灵组
     all_fruit_group = Group()
@@ -169,15 +170,45 @@ if __name__ == "__main__":
     # mouse=pygame.mouse
     mouse_thread = mouse_Thread()
     mouse_thread.start()
+
+    cap = cv2.VideoCapture(0)
     while True:
         clock.tick(30)
-        if control_game ==0:
-            start_interface_screen(screen,start_button_dict,mouse_thread.mouse_xy)
-            start_interface_event(screen,mouse_thread.mouse_xy)
-        if control_game == 2:
-        # mouse_xy = mouse.get_pos()
-            update_event(screen,all_fruit_group,mouse_thread.mouse_xy)
-            all_fruit_group.update()
-            update_screen(screen,all_fruit_group,mouse_thread.mouse_xy)
+        ret, frame = cap.read()
+        #frame = cv2.flip(frame, 1)
+
+        # show a frame
+        position = img_percess_red.percess_by_hsv(frame)
+        #print(position)
+        cv2.circle(frame, position, 60, (0, 0, 255), 0)
+
+            #cv2.imshow("capture", frame)
+            #if cv2.waitKey(1) & 0xFF == ord('q'):
+            #    break
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = np.rot90(frame)
+        # frame = cv2.flip(frame, 1)
+        # cv2.imshow("capture", frame)
+        frame = pygame.surfarray.make_surface(frame)
+        screen.blit(frame,(0,0))
+        pygame.draw.circle(screen, [255, 0, 0], position, 5)
+        pygame.display.update()
+    #     ret, frame = cap.read()
+    #    # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    #     position = img_percess_red.percess_by_hsv(frame)
+
+    #     frame = np.rot90(frame)
+    #     frame = pygame.surfarray.make_surface(frame)
+        # print(position)
+        # if control_game ==0:
+        #     start_interface_screen(screen,start_button_dict,mouse_thread.mouse_xy)
+        #     start_interface_event(screen,mouse_thread.mouse_xy)
+        # if control_game == 0:
+        # # mouse_xy = mouse.get_pos()
+        #     update_event(screen,all_fruit_group,position)
+        #     all_fruit_group.update()
+        #     # update_screen(screen,all_fruit_group,position,pygame.transform.scale(frame,(game_setting.screen_width,game_setting.screen_height)))
+        #     update_screen(screen,all_fruit_group,position,frame)
 
 

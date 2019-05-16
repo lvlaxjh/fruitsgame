@@ -6,7 +6,7 @@
 import cv2
 import numpy as np
 import pygame
-from img_percess import percess
+import img_percess_red
 
 pygame.init()
 screen = pygame.display.set_mode((600,400))
@@ -16,21 +16,19 @@ while 1:
     # get a frame
     ret, frame = cap.read()
     #frame = cv2.flip(frame, 1)
-    try:
-        # show a frame
-        position = percess(frame)
-        #print(position)
-        cv2.circle(frame, position, 60, (0, 0, 255), 0)
-    except e:
-        print('rua')
-    finally:
+
+    # show a frame
+    # position = img_percess_red.percess_by_hsv(frame)
+    #print(position)
+    # cv2.circle(frame, position, 60, (0, 0, 255), 0)
+    # print(position)
         #cv2.imshow("capture", frame)
         #if cv2.waitKey(1) & 0xFF == ord('q'):
         #    break
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = np.rot90(frame)
-        frame = pygame.surfarray.make_surface(frame)
-        screen.blit(frame, (0, 0))
-        pygame.display.update()
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame = np.rot90(frame)
+    frame = pygame.surfarray.make_surface(frame)
+    screen.blit(frame, (0, 0))
+    pygame.display.update()
 cap.release()
 cv2.destroyAllWindows()
