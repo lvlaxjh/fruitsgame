@@ -14,9 +14,9 @@ class Fruits(Sprite):
         Sprite.__init__(self)
         get_setting = setting.Setting()
         self.screen = screen
-        self.image = pygame.image.load(choose_fruit)
+        self.image = choose_fruit
         self.rect = self.image.get_rect()
-        self.item = Item(w, h, rate = 10,mode=0)#5-
+        self.item = Item(w, h, rate = 9,mode=0)#5-
         # self.x_speed = x_speed
         # self.y_speed = y_speed
         # self.x_acceleration = x_acceleration
