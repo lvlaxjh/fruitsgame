@@ -10,7 +10,9 @@ import time
 #
 import setting
 import img_percess_red
-from fruit import Fruits
+from sprites import Fruits
+from sprites import Clock
+from sprites import Frog
 
 # 设置
 game_setting = setting.Setting()
@@ -113,7 +115,7 @@ def draw_knife(screen, positions):
     pygame.draw.circle(screen, [0, 255, 0], positions, 10)
 
 # 主游戏界面更新
-def update_game_screen(screen, fruits_group, positions, time_text,score_text,frame=None):
+def update_game_screen(screen, fruits_group,clock_group,frog_group, positions, time_text,score_text,frame=None):
     screen.fill((0, 0, 0))  # 测试使用,使用调用frame摄像头
     # screen.blit(frame,(0,0))
     get_time()
@@ -124,55 +126,66 @@ def update_game_screen(screen, fruits_group, positions, time_text,score_text,fra
     screen.blit(score_t_f,(500,0))
     for i in fruits_group.sprites():
         i.load()
+    for i in clock_group.sprites():
+        i.load()
+    for i in frog_group.sprites():
+        i.load()
     draw_knife(screen, positions)
 
 
 
 #主游戏界面事件
 #切水果判定
-def game_position_determination(fruits_group, positions):
-    global score
+def game_position_determination(fruits_group,clock_group,frog_group, positions):
+    global score,game_times
     var = 10
-    for fruit_one in all_fruit_group:
-        if positions[0] > fruit_one.rect.x+var and positions[0] < fruit_one.rect.x+size_f-var:
-            if positions[1] > fruit_one.rect.y+var and positions[1] < fruit_one.rect.y + size_f-var:
-                all_fruit_group.remove(fruit_one)
+    var_s = 300
+    for one in fruits_group:
+        if positions[0] > one.rect.x+var and positions[0] < one.rect.x+size_f-var:
+            if positions[1] > one.rect.y+var and positions[1] < one.rect.y + size_f-var:
+                fruits_group.remove(one)
                 score+=1
-        if fruit_one.rect.y > game_setting.screen_height+500 or fruit_one.rect.x < -500 or fruit_one.rect.x > game_setting.screen_width+500:
-            all_fruit_group.remove(fruit_one)
+        if one.rect.y > game_setting.screen_height+var_s or one.rect.x < -var_s or one.rect.x > game_setting.screen_width+var_s:
+            fruits_group.remove(one)
+    for one in clock_group:
+        if positions[0] > one.rect.x+var and positions[0] < one.rect.x+size_f-var:
+            if positions[1] > one.rect.y+var and positions[1] < one.rect.y + size_f-var:
+                clock_group.remove(one)
+                game_times+=2
+        if one.rect.y > game_setting.screen_height+var_s or one.rect.x < -var_s or one.rect.x > game_setting.screen_width+var_s:
+            clock_group.remove(one)
+    for one in frog_group:
+        if positions[0] > one.rect.x+var and positions[0] < one.rect.x+size_f-var:
+            if positions[1] > one.rect.y+var and positions[1] < one.rect.y + size_f-var:
+                frog_group.remove(one)
+                game_times-=1
+        if one.rect.y > game_setting.screen_height+var_s or one.rect.x < -var_s or one.rect.x > game_setting.screen_width+var_s:
+            frog_group.remove(one)
+    
+    
 
 a=0
 b=0
-def update_game_event(screen, fruits_group, positions):
+def update_game_event(screen, fruits_group,clock_group,frog_group, positions):
     global a,b
-    game_position_determination(fruits_group, positions)
-    # if game_times%5 == 0:
-    #     if len(fruits_group) < 2:
-    #         create_clock = Fruits(get_all_img['ft'], screen, screen_w, screen_h)
-    #         x_ran = random.randint(size_f, screen_w-size_f)
-    #         create_clock.set_xy(x_ran, screen_h+size_f)
-    #         fruits_group.add(create_clock)
+    game_position_determination(fruits_group,clock_group,frog_group, positions)
     if len(fruits_group) < fruit_num:
-        if game_times%4 == 0 and a ==0:
-            create_clock = Fruits(get_all_img['ft'], screen, screen_w, screen_h)
-            x_ran = random.randint(size_f, screen_w-size_f)
-            create_clock.set_xy(x_ran, screen_h+size_f)
-            fruits_group.add(create_clock)
-            a+=1
-        else:
-            a=0
-        if game_times%7 == 0 and b ==0:
-            create_frog = Fruits(get_all_img['ff'], screen, screen_w, screen_h)
-            x_ran = random.randint(size_f, screen_w-size_f)
-            create_frog.set_xy(x_ran, screen_h+size_f)
-            fruits_group.add(create_frog)
-            b+=1
-        else:
-            b=0
         create_fruit = Fruits(get_ran_something(), screen, screen_w, screen_h)
         x_ran = random.randint(size_f, screen_w-size_f)
         create_fruit.set_xy(x_ran, screen_h+size_f)
         fruits_group.add(create_fruit)
+    if game_times %4 == 0:
+        if len(clock_group)<1:
+            create_clock = Clock(get_all_img['ft'], screen, screen_w, screen_h)
+            x_ran = random.randint(size_f, screen_w-size_f)
+            create_clock.set_xy(x_ran, screen_h+size_f)
+            clock_group.add(create_clock)
+    if game_times %7 == 0:
+        if len(frog_group)<1:
+            create_frog = Frog(get_all_img['ff'], screen, screen_w, screen_h)
+            x_ran = random.randint(size_f, screen_w-size_f)
+            create_frog.set_xy(x_ran, screen_h+size_f)
+            frog_group.add(create_frog)
         
 
 
@@ -251,6 +264,8 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     # 水果精灵组
     all_fruit_group = Group()
+    all_clock_group = Group()
+    all_frog_group = Group()
     mouse = pygame.mouse
     mouse_thread = mouse_Thread()
     mouse_thread.start()
@@ -273,9 +288,11 @@ if __name__ == "__main__":
             # tran_frame = pygame.transform.scale(frame,(game_setting.screen_width,game_setting.screen_height))
             # get_real_positions = get_real_positon(position)
             # update_game_screen(screen,all_fruit_group,get_real_positions,frame=tran_frame)
-            update_game_screen(screen, all_fruit_group, get_real_positions,time_text,score_text)
+            update_game_screen(screen, all_fruit_group,all_clock_group,all_frog_group, get_real_positions,time_text,score_text)
             all_fruit_group.update()
-            update_game_event(screen, all_fruit_group, get_real_positions)
+            all_clock_group.update()
+            all_frog_group.update()
+            update_game_event(screen, all_fruit_group,all_clock_group,all_frog_group, get_real_positions)
         if control_game == 5:
             pygame.quit()
             sys.exit(0)
