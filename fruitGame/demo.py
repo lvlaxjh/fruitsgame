@@ -9,8 +9,10 @@ import pygame
 import img_percess_red
 
 pygame.init()
-screen = pygame.display.set_mode((600,400))
+screen = pygame.display.set_mode((1280, 720))
 cap = cv2.VideoCapture(0)
+cap.set(3, 1280)
+cap.set(4, 720)
 #cv2.namedWindow('capture', cv2.WINDOW_NORMAL)
 while 1:
     # get a frame
@@ -28,6 +30,7 @@ while 1:
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame = np.rot90(frame)
     frame = pygame.surfarray.make_surface(frame)
+    print(frame.get_size())
     screen.blit(frame, (0, 0))
     pygame.display.update()
 cap.release()
